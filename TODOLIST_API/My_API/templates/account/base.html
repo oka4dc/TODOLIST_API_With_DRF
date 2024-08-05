@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}My Site{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'account/login.html' %}">Login</a></li>
+            <li><a href="{% url 'account/signup.html' %}">Signup</a></li>
+            <li><a href="{% url 'account/logout.html' %}">Logout</a></li>
+        </ul>
+    </nav>
+    {% block content %}{% endblock %}
+</body>
+</html>

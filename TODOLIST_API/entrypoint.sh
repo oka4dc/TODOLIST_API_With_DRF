@@ -1,19 +1,19 @@
-# entrypoint.sh
-
 #!/bin/sh
 
-if [ "$DATABASE" = "postgres" ]
-then
-    echo "Waiting for postgres..."
+# Exit immediately if a command exits with a non-zero status.
+set -e
 
-    while ! nc -z $DJANGO_DB_HOST $DJANGO_DB_PORT; do
-      sleep 0.1
-    done
+# Wait for the PostgreSQL database to be ready
+/app/wait-for-it.sh db:5432 --timeout=30 --strict -- echo "Database is up"
 
-    echo "PostgreSQL started"
-fi
-
+# Apply database migrations
+echo "Applying database migrations..."
 python manage.py migrate
+
+# Collect static files
+echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
+# Start the Gunicorn server
+echo "Starting Gunicorn..."
 exec "$@"
